@@ -13,17 +13,19 @@ library(knmitransformer)
 refData <- KnmiRefFile("KNMI14____ref_tg___19810101-20101231_v3.2.txt")  
 
 # Copy the file here for the sake of completeness
-file.copy(refData, "tg/KNMI14____ref_tg___19810101-20101231_v3.2.txt",
-          overwrite = TRUE)
+file.copy(refData, "tg/KNMI14____ref_tg.txt", overwrite = TRUE)
 
 
 regions <- MatchRegionsOnStationId(ReadInput("tg", refData)$header[1, -1])
 
 fn <- function(scenario, horizon) {
-  filename <- paste0("tg/test_", scenario, "_", horizon, ".txt")
+  filename <- "tg/KNMI14"
   if (horizon == 2030) {
-    filename <- paste0("tg/test____", horizon, ".txt")
+    filename <- paste0(filename, "____2030")
+  } else {
+    filename <- paste0(filename, "_", scenario, "_", horizon)
   }
+  filename <- paste0(filename, "_tg.txt")
   TransformTemp(input = refData, var = "tg",
                 scenario = scenario, horizon = horizon,
                 regions = regions, ofile = filename)
