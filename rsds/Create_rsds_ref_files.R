@@ -10,25 +10,23 @@ library(purrr)
 library(knmitransformer)
 
 # Obtain the reference series used in the knmitransformer package
-refData <- KnmiRefFile("KNMI14____ref_tx___19810101-20101231_v3.2.txt")  
+refData <- KnmiRefFile("KNMI14____ref_rsds___19810101-20101231_v3.2.txt")  
 
 # Copy the file here for the sake of completeness
-file.copy(refData, "tx/KNMI14____ref_tx.txt", overwrite = TRUE)
+file.copy(refData, "rsds/KNMI14____ref_rsds.txt", overwrite = TRUE)
 
-
-regions <- MatchRegionsOnStationId(ReadInput("tn", refData)$header[1, -1])
 
 fn <- function(scenario, horizon) {
-  filename <- "tx/KNMI14"
+  filename <- "rsds/KNMI14"
   if (horizon == 2030) {
     filename <- paste0(filename, "____2030")
   } else {
     filename <- paste0(filename, "_", scenario, "_", horizon)
   }
-  filename <- paste0(filename, "_tx.txt")
-  TransformTemp(input = refData, var = "tx",
+  filename <- paste0(filename, "_rsds.txt")
+  TransformRadiation(input = refData,
                 scenario = scenario, horizon = horizon,
-                regions = regions, ofile = filename)
+                ofile = filename)
 }
 
 combinations <- expand.grid(scenario = c("GL", "GH", "WL", "WH"),
